@@ -11,17 +11,17 @@
 import React from 'react';
 import {SafeAreaView, StatusBar} from 'react-native';
 
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+// import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {ToastProvider} from 'react-native-toast-notifications';
 import Navigation from './navigation';
 import useColorScheme from './hooks/useColorScheme';
-
+import Colors from "./constants/Colors";
 const App = () => {
   const colorScheme = useColorScheme();
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    backgroundColor: isDarkMode ? Colors.dark.background : Colors.light.background,
     flex: 1,
   };
 
@@ -31,7 +31,7 @@ const App = () => {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      <ToastProvider>
+      <ToastProvider placement={'top'}>
         <Navigation colorScheme={colorScheme} />
         <StatusBar />
       </ToastProvider>

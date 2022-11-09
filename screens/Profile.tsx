@@ -16,9 +16,7 @@ import {RootTabScreenProps} from '../types';
 import {achievementsStore} from '../store/achievements.store';
 
 export default function Profile({navigation}: RootTabScreenProps<'Profile'>) {
-  console.log('PROFILE');
   const colorScheme = useColorScheme();
-  console.log(colorScheme);
   const toast = useToast();
 
   const handleOnLogOut = async () => {

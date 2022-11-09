@@ -33,7 +33,7 @@ import FriendProfileScreen from '../screens/FriendProfile.screen';
 import ChartsScreen from '../screens/Charts.screen';
 import AchievementsScreen from '../screens/Achievements.screen';
 import {achievementsStore} from '../store/achievements.store';
-// import AchievementModal from '../components/AchievementModal';
+import AchievementModal from '../components/AchievementModal';
 import {faUser} from '@fortawesome/free-regular-svg-icons';
 import {faSearch} from '@fortawesome/free-solid-svg-icons';
 import {faHotjar} from "@fortawesome/free-brands-svg-icons";
@@ -87,7 +87,7 @@ function AuthStackView({navigation}: any) {
       <Stack.Screen
         name="Login"
         component={LogIn}
-        options={{headerShown: true}}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="SignIn"
@@ -233,7 +233,7 @@ function BottomTabNavigator() {
               transparent={true}
               animationType="slide"
               visible={achievementsStore.newAchievementDialog.isVisible}>
-              <View style={s.modalView}>{/*<AchievementModal />*/}</View>
+              <View style={s.modalView}><AchievementModal /></View>
             </Modal>
           </View>
         )}

@@ -4,7 +4,7 @@ import PagesRead from '../components/Profile/PagesRead';
 
 const ChartsScreen = () => {
   return (
-    <View>
+    <View style={{flex:1}}>
       <PagesRead />
     </View>
   );

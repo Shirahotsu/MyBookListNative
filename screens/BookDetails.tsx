@@ -1,12 +1,10 @@
 import {
   Image,
-  ScrollView,
   StyleSheet,
-  TextInput,
   View as ViewRN,
 } from 'react-native';
 
-import {Button, Text, View} from '../components/Themed';
+import {Button, Text, View, TextInput, ScrollView} from '../components/Themed';
 
 import FontSize from '../constants/FontSize';
 import Spacing from '../constants/Spacing';
@@ -21,7 +19,7 @@ import BadgeThemed from '../components/BadgeThemed';
 import {observer} from 'mobx-react';
 import {bookDetailsStore} from '../store/bookDetails.store';
 import {convertDateToDashedDate, convertSecondsToDate} from '../utils/date';
-import React, {createRef, useEffect, useState} from 'react';
+import React, { createRef, useEffect, useRef, useState } from "react";
 import {Book} from '../models/Book.model';
 import {addComment} from '../firebase/bookList.firebase';
 import {getAverageScore} from '../utils/score';
@@ -105,7 +103,8 @@ export default function BookDetails({
   const [comment, setComment] = useState('');
   const [bookDetails, setBookDetails] = useState<Book | null>(null);
   const [isInBookshelfView, setIsInBookshelfView] = useState(false);
-  const textarea = React.createRef();
+  let textarea = useRef<TextInput>(null);
+  let commentInputValue = ''
   const [myScore, setMyScore] = useState(null);
   const [bookStatus, setBookStatus] = useState(null);
   const [pagesRead, setPagesRead] = useState('0');
@@ -167,20 +166,22 @@ export default function BookDetails({
   };
 
   const handleAddComment = async () => {
-    const commentMessage = textarea.current.value;
-    if (!commentMessage.trim()) {
+    if (!commentInputValue.trim()) {
       return;
     }
-    const result = await addComment(commentMessage);
+    const result = await addComment(commentInputValue);
     if (result) {
       textarea.current.value = '';
     }
   };
 
-  const handleOnKeydown = (event: KeyboardEvent) => {
-    if (event.key === 'Enter') {
-      handleAddComment();
-    }
+  const handleOnKeydown = (event) => {
+    commentInputValue = event
+    // if (event.key === 'Enter') {
+    //   handleAddComment();
+    // } else{
+    //   // setComment(event)
+    // }
   };
 
   const handleOnPagesReadInputBlur = async () => {
@@ -360,7 +361,7 @@ export default function BookDetails({
               <FontAwesomeIcon
                 size={FontSize.h4}
                 icon={faStar}
-                color={Colors[colorScheme].text}
+                style={{color: Colors[colorScheme].text}}
               />
             </View>
             <Title>
@@ -444,11 +445,13 @@ export default function BookDetails({
             </View>
             {!bookDetailsStore.isInBookshelfView && (
               <View>
-                <View>
+                <View style={{marginBottom:Spacing.md}}>
                   <TextInput
                     ref={textarea}
-                    onKeyDown={e => handleOnKeydown(e)}
+                    onChangeText={e => handleOnKeydown(e)}
+                    placeholder={'Dodaj komentarz'}
                     id={'new-comment-textarea'}
+                    style={{marginBottom:Spacing.md}}
                   />
                   <Button title={'Dodaj'} onPress={() => handleAddComment()} />
                 </View>
@@ -509,13 +512,16 @@ export default function BookDetails({
   });
 
   return (
-    <ScrollView>
+    <ScrollView style={s.scrollView}>
       <BookDetailsView />
     </ScrollView>
   );
 }
 
 const s = StyleSheet.create({
+  scrollView:{
+    flex: 1
+  },
   container: {
     paddingHorizontal: Spacing.md,
     paddingBottom: Spacing.md,
