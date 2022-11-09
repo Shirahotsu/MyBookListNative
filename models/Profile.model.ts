@@ -39,7 +39,7 @@ export interface Book {
 }
 
 export interface DailyReadPages {
-    date: DateGT,
+    seconds: Number,
     pages: Number
 }
 

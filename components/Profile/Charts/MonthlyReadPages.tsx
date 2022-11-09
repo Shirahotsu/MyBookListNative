@@ -59,7 +59,7 @@ const MonthlyReadPages = () => {
             const dailyReadPages = profileStore.dailyReadPages
             const convertedObject = {}
             dailyReadPages.forEach(item => {
-                const key = convertFormSecondsToDashedDate(item.date.seconds)
+                const key = convertFormSecondsToDashedDate(item.seconds)
                 Object.assign(convertedObject, {
                     [key]: {
                         customStyles: {
@@ -105,10 +105,11 @@ const MonthlyReadPages = () => {
     const SelectedData = () => {
         return (
             <View style={s.selectedDate}>
+                <Text style={{fontSize: FontSize.h5, marginRight: Spacing.sm}}>Wybrano: </Text>
                 {markedDates[selected] && (
                     <>
-                        <Text>Data: {selected}</Text>
-                        <Text>Przeczytane strony: {markedDates[selected].pages}</Text>
+                        <Text style={{fontSize: FontSize.h5}}>Data: {selected}</Text>
+                        <Text style={{fontSize: FontSize.h5}}>Przeczytane strony: {markedDates[selected].pages}</Text>
                     </>
                 )}
 
@@ -125,7 +126,7 @@ const MonthlyReadPages = () => {
                         hideExtraDays
                         enableSwipeMonths
                         current={convertDateToDashedDate(INITIAL_DATE)}
-                        minDate={'2018-03-01'}
+                        minDate={'2022-03-01'}
                         onDayPress={onDayPress}
                         markingType={'custom'}
                         theme={theme('dark')}
@@ -163,8 +164,9 @@ const s = StyleSheet.create({
         marginBottom: 10
     },
     selectedDate: {
-        minHeight: 40,
+        minHeight: 80,
         marginTop: Spacing.sm,
-        marginBottom: Spacing.md
+        marginBottom: Spacing.md,
+        marginLeft: Spacing.xs,
     }
 });

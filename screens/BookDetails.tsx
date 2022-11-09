@@ -34,7 +34,7 @@ import {
 } from '../firebase/bookShelf.firebase';
 import {useToast} from 'react-native-toast-notifications';
 import {profileStore} from '../store/profile.store';
-import {loadProfileDetails} from '../firebase/profile.firebase';
+import { loadProfileDetails, updateProfileDailyReadPages } from "../firebase/profile.firebase";
 import {RootTabScreenProps} from '../types';
 import {achievementsStore} from '../store/achievements.store';
 
@@ -104,6 +104,7 @@ export default function BookDetails({
   const [bookDetails, setBookDetails] = useState<Book | null>(null);
   const [isInBookshelfView, setIsInBookshelfView] = useState(false);
   let textarea = useRef<TextInput>(null);
+  let pagesNumber = ''
   let commentInputValue = ''
   const [myScore, setMyScore] = useState(null);
   const [bookStatus, setBookStatus] = useState(null);
@@ -183,9 +184,12 @@ export default function BookDetails({
     //   // setComment(event)
     // }
   };
+  const handleOnPagesReadChange = (pages) => {
+    pagesNumber = pages
+  }
 
   const handleOnPagesReadInputBlur = async () => {
-    const inputPagesRead = parseInt(textInput.current.value);
+    const inputPagesRead = parseInt(pagesNumber);
     if (inputPagesRead >= 0 && inputPagesRead <= bookDetails.pages) {
       const response = await changeBookPagesRead(
         bookDetails?.id,
@@ -193,6 +197,7 @@ export default function BookDetails({
       );
       if (response) {
         updatePagesReadAchievement(parseInt(pagesRead), inputPagesRead);
+        await changeDailyReadPages(parseInt(pagesRead), inputPagesRead)
         setPagesRead(String(inputPagesRead));
         toast.show('Zmieniono', {type: 'success'});
       } else {
@@ -204,6 +209,11 @@ export default function BookDetails({
       toast.show('Błędne wartości', {type: 'danger'});
     }
   };
+
+  const changeDailyReadPages = async (currentPagesRead: number, newPagesRead: number) => {
+    const diff = newPagesRead - currentPagesRead;
+    await updateProfileDailyReadPages(diff)
+  }
 
   const updatePagesReadAchievement = (
     currentPagesRead: number,
@@ -334,12 +344,12 @@ export default function BookDetails({
                   marginLeft: Spacing.xs,
                 }}>
                 <TextInput
-                  ref={textInput}
                   style={{
                     width: 30,
                     color: Colors[colorScheme].text,
                     borderWidth: 0,
                   }}
+                  onChangeText={e=>handleOnPagesReadChange(e)}
                   defaultValue={pagesRead}
                   onBlur={() => handleOnPagesReadInputBlur()}
                 />
