@@ -124,7 +124,7 @@ const s = StyleSheet.create({
     flexWrap: 'nowrap',
     paddingHorizontal: Spacing.sm,
     paddingVertical: Spacing.xs,
-    height: 80,
+    height: 100,
   },
   imageContainer: {
     height: 80,

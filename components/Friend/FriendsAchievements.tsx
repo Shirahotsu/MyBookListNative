@@ -79,6 +79,7 @@ const FriendsAchievements = () => {
 
 const s = StyleSheet.create({
   container: {
+    flex:1,
     flexDirection: 'column',
     paddingTop: Spacing.md,
   },
