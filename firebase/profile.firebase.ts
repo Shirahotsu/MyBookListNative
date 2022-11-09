@@ -204,7 +204,6 @@ const updateProfileDailyReadPages = async (diff: number) => {
   const docRef = doc(db, `profile/${userId}`);
   const result = await getDoc(docRef);
   const dailyReadPages = [...result.data().dailyReadPages];
-  console.log("-----------------DAILYREADPAGES-----------------");
   const todayDate = new Date()
   todayDate.setHours(0, 0, 0, 0);
   const seconds = convertDateToSeconds(todayDate);

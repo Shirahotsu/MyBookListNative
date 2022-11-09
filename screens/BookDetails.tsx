@@ -335,25 +335,30 @@ export default function BookDetails({
               s.pagesReadView,
               {backgroundColor: Colors[colorScheme].tint},
             ]}>
-            <ViewRN style={{flexDirection: 'row'}}>
+            <ViewRN style={{flexDirection: 'row', maxHeight: 45, alignItems: 'center', display:'flex'}}>
               <Text>Strony</Text>
               <ViewRN
                 style={{
-                  justifyContent: 'flex-start',
+                  height: '100%',
+                  justifyContent: 'center',
+                  alignItems: "center",
                   flexDirection: 'row',
                   marginLeft: Spacing.xs,
                 }}>
                 <TextInput
                   style={{
-                    width: 30,
+                    minHeight: 30,
+                    minWidth: 30,
                     color: Colors[colorScheme].text,
                     borderWidth: 0,
+                    textAlign: 'right'
                   }}
                   onChangeText={e=>handleOnPagesReadChange(e)}
                   defaultValue={pagesRead}
                   onBlur={() => handleOnPagesReadInputBlur()}
                 />
-                <Text> / {bookDetails?.pages}</Text>
+                <Text> / </Text>
+                <Text style={{paddingLeft: Spacing.md}}>{bookDetails?.pages}</Text>
               </ViewRN>
             </ViewRN>
           </View>
@@ -457,10 +462,8 @@ export default function BookDetails({
               <View>
                 <View style={{marginBottom:Spacing.md}}>
                   <TextInput
-                    ref={textarea}
                     onChangeText={e => handleOnKeydown(e)}
                     placeholder={'Dodaj komentarz'}
-                    id={'new-comment-textarea'}
                     style={{marginBottom:Spacing.md}}
                   />
                   <Button title={'Dodaj'} onPress={() => handleAddComment()} />
@@ -606,12 +609,10 @@ const s = StyleSheet.create({
     paddingVertical: Spacing.sm,
   },
   pagesReadView: {
-    width: '100%',
     fontWeight: '500',
     textTransform: 'uppercase',
-    height: 35,
+    maxHeight: 50,
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'center',
   },
 });

@@ -2,8 +2,8 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  TouchableHighlight,
-} from 'react-native';
+  TouchableHighlight, TouchableOpacity,
+} from "react-native";
 
 import {Button, Text, TextInput, View} from '../components/Themed';
 import {RootTabScreenProps} from '../types';
@@ -22,6 +22,7 @@ import Spacing from '../constants/Spacing';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faArrowUp} from '@fortawesome/free-solid-svg-icons';
 import {faSearch} from '@fortawesome/free-solid-svg-icons';
+import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import FontSize from '../constants/FontSize';
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
@@ -66,6 +67,10 @@ export default function Search({navigation}: RootTabScreenProps<'Search'>) {
     await loadFirst50SearchResults(inputSearchQuery);
     setInputSearchQuery(false);
   };
+
+  const handleOnFabPress = () => {
+    navigation.push('AddBook')
+  }
 
   const BookListView = observer(() => {
     return showSearchHint ? (
@@ -147,6 +152,13 @@ export default function Search({navigation}: RootTabScreenProps<'Search'>) {
         </View>
         <BookListView />
       </ScrollView>
+      <View style={s.fab}>
+        <TouchableOpacity onPress={()=>handleOnFabPress()}>
+          <View style={{borderRadius: 100, width:50,  height: 50, backgroundColor: Colors.dark.tint, alignItems:"center", justifyContent: 'space-around'}}>
+            <FontAwesomeIcon icon={faPlus} color={'white'} size={Spacing.xl}/>
+          </View>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
@@ -187,4 +199,9 @@ const s = StyleSheet.create({
     justifyContent: 'space-around',
     marginLeft: Spacing.xs,
   },
+  fab:{
+    position: "absolute",
+    bottom: 20,
+    right: 20,
+  }
 });

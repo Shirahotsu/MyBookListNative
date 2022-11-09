@@ -2,8 +2,8 @@ import {BookStatus} from "./BookShelf.model";
 
 export interface Book {
     comments: Comment[]
-    userRate: UserRate
-    bookCover: string
+    userRate: UserRate[]
+    bookCover: string | null
     categories: string[]
     description: string
     title: string

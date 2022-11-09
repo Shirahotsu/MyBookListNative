@@ -40,6 +40,7 @@ import {faHotjar} from "@fortawesome/free-brands-svg-icons";
 import {faBookOpen} from "@fortawesome/free-solid-svg-icons";
 import Spacing from '../constants/Spacing';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import AddBookScreen from "../screens/AddBook.screen";
 
 export default function Navigation({
   colorScheme,
@@ -121,6 +122,7 @@ function SearchStackScreen({navigation}: any) {
     <SearchStack.Navigator initialRouteName="Search">
       <SearchStack.Screen name="Search" component={Search} />
       <SearchStack.Screen name="Details" component={BookDetails} />
+      <SearchStack.Screen name="AddBook" component={AddBookScreen} />
     </SearchStack.Navigator>
   );
 }
