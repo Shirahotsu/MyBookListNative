@@ -17,6 +17,9 @@ import {useToast} from 'react-native-toast-notifications';
 import {loadFriendProfileDetails} from '../firebase/friendProfile.firebase';
 import {RootTabScreenProps} from '../types';
 import {achievementsStore} from '../store/achievements.store';
+import {faPlus} from "@fortawesome/free-solid-svg-icons";
+import {faTrash} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-native-fontawesome";
 
 const FriendScreen = ({navigation}: RootTabScreenProps<'Profile'>) => {
   let timer;
@@ -74,11 +77,11 @@ const FriendScreen = ({navigation}: RootTabScreenProps<'Profile'>) => {
         </View>
         <Pressable onPress={() => handleOnIconClick(friend, mode)}>
           <View style={s.removeFriendIconView}>
-            {/*<FontAwesome5*/}
-            {/*  size={FontSize.h4}*/}
-            {/*  name={mode === 'add' ? 'plus' : 'trash'}*/}
-            {/*  color={mode === 'add' ? Colors.dark.tint : '#f44336'}*/}
-            {/*/>*/}
+            <FontAwesomeIcon
+              size={FontSize.h4}
+              icon={mode === 'add' ? faPlus : faTrash}
+              color={mode === 'add' ? Colors.dark.tint : '#f44336'}
+            />
           </View>
         </Pressable>
       </View>
@@ -204,8 +207,8 @@ const s = StyleSheet.create({
   },
   avatarImage: {
     resizeMode: 'cover',
-    // width: '100%',
-    // height: '100%'
+    width: '100%',
+    height: '100%'
   },
 });
 
