@@ -141,7 +141,7 @@ const updateBookScore = async (bookId: string, score: Score) => {
                 userId: userId,
                 userScore: score
             })
-            totalScore = scoreAmount+score
+            totalScore = totalScore+score
             scoreAmount++
         } else {
             newUserRate = userRate.map(item => {

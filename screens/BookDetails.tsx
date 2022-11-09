@@ -389,7 +389,7 @@ export default function BookDetails({
                 color={Colors[colorScheme].text}
               />
             </View>
-            <Title>{bookDetailsStore.totalScore}</Title>
+            <Title>{bookDetailsStore.scoreAmount}</Title>
           </View>
 
           <View style={s.spacer} />
