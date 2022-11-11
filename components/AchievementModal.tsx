@@ -1,13 +1,22 @@
 import React from "react";
+import {View as ViewRn} from 'react-native'
 import { Button, Text, View } from "./Themed";
-import { Image, StyleSheet } from "react-native";
+import Share from 'react-native-share';
+import { Image, StyleSheet, TouchableOpacity } from "react-native";
 import { achievementsStore } from "../store/achievements.store";
 import FontSize from "../constants/FontSize";
 import Spacing from "../constants/Spacing";
 import { AchievementType } from "../models/Achievement.model";
+import { achievement } from "../constants/Achievements";
+import { bookListStore } from "../store/bookList.store";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import {faShare} from "@fortawesome/free-solid-svg-icons";
+import {faClose} from "@fortawesome/free-solid-svg-icons";
+import Colors from "../constants/Colors";
+
 
 const AchievementModal = () => {
-
+  const base64Achievement = achievement
   const achievementImage = {
     books: {
       1: require("../assets/achievements/books/books1.png"),
@@ -86,6 +95,19 @@ const AchievementModal = () => {
     }
   };
 
+  const onShare = async () => {
+    const options = {
+      message: `Zobacz osiągnąłem poziom ${achievementsStore.newAchievementDialog.level} w kategorii ${getAchievementLabel(achievementsStore.newAchievementDialog.type)}!`,
+      url: base64Achievement[achievementsStore.newAchievementDialog.type][achievementsStore.newAchievementDialog.level] || ''
+    }
+    try {
+      await Share.open(options);
+      closeModal()
+    } catch (error) {
+      closeModal()
+    }
+  };
+
   return (
     <View>
       <View>
@@ -107,7 +129,33 @@ const AchievementModal = () => {
         <Text style={s.descriptionSubText}>Tak trzymaj, a niedługo będziesz mistrzem czytelnictwa :D</Text>
       </View>
       <View>
-        <Button title={"SUPER!"} onPress={() => closeModal()} />
+        <TouchableOpacity onPress={() => onShare()}>
+          <ViewRn style={{marginBottom:Spacing.md, flexDirection: "row", borderStyle:'solid', borderWidth: 1, borderColor: Colors.dark.tint, height: 40, alignItems: "center", borderRadius: 4, justifyContent:'space-around'}}>
+            <ViewRn style={{flexDirection:'row', alignItems: "center"}}>
+              <Text style={{fontWeight:'600', fontSize: FontSize.basic}}>UDOSTĘPNIJ</Text>
+              <FontAwesomeIcon
+                size={FontSize.basic}
+                style={{marginLeft: Spacing.sm}}
+                icon={faShare}
+                color={'white'}
+              />
+            </ViewRn>
+          </ViewRn>
+        </TouchableOpacity>
+        {/*<Button title={"UDOSTĘPNIJ"} onPress={() => onShare()} />*/}
+        <TouchableOpacity onPress={() => closeModal()}>
+          <ViewRn style={{marginBottom:Spacing.md, flexDirection: "row",backgroundColor:Colors.dark.tint, height: 40, alignItems: "center", borderRadius: 4, justifyContent:'space-around'}}>
+            <ViewRn style={{flexDirection:'row', alignItems: "center"}}>
+              <Text style={{fontWeight:'600', fontSize: FontSize.basic}}>SUPER!</Text>
+              <FontAwesomeIcon
+                size={FontSize.basic}
+                style={{marginLeft: Spacing.sm}}
+                icon={faClose}
+                color={'white'}
+              />
+            </ViewRn>
+          </ViewRn>
+        </TouchableOpacity>
       </View>
     </View>
   );
