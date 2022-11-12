@@ -14,6 +14,7 @@ export interface Book {
     id: string
     released: Released,
     pages: number,
+    averageScore: number,
     myScore?:  Score| null,
     pagesRead?: number,
     status?: BookStatus | null,

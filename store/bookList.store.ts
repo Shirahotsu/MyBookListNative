@@ -3,7 +3,7 @@ import {action, computed, makeObservable, observable} from "mobx";
 import {loadFirst10Books} from "../firebase/bookList.firebase";
 
 const INITIAL_SORT_OPTION = {
-    sortBy: 'totalScore',
+    sortBy: 'averageScore',
     direction: 'desc'
 }
 

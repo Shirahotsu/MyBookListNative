@@ -31,17 +31,17 @@ export default function SortOptions(props: any) {
   const ButtonGroup = observer(() => {
     return (
       <>
-        <TouchableHighlight onPress={() => handleOnSortByChange('totalScore')}>
+        <TouchableHighlight onPress={() => handleOnSortByChange('averageScore')}>
           <View
             style={[
               s.sortByButton,
               {
                 backgroundColor:
-                  bookListStore.sortOption.sortBy === 'totalScore'
+                  bookListStore.sortOption.sortBy === 'averageScore'
                     ? Colors[colorScheme].tint
                     : 'white',
                 borderColor:
-                  bookListStore.sortOption.sortBy === 'totalScore'
+                  bookListStore.sortOption.sortBy === 'averageScore'
                     ? Colors[colorScheme].tint
                     : Colors.dark.background,
                 borderBottomLeftRadius: 8,

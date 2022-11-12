@@ -49,7 +49,7 @@ export default function Top({navigation}: any) {
                 isFromMyBookList={false}
                 title={book.title}
                 booksRead={book.usersFinished}
-                score={getAverageScore(book.totalScore, book.scoreAmount)}
+                score={book.averageScore}
                 number={i + 1}
               />
             </TouchableHighlight>

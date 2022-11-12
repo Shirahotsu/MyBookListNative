@@ -23,6 +23,7 @@ import { profileStore } from "../store/profile.store";
 import { firebaseConfig } from "./firebaseConfig";
 import { userStore } from "../store/user.store";
 import { convertDateToSeconds } from "../utils/date";
+import { getAverageScore } from "../utils/score";
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -159,7 +160,7 @@ const updateBookScore = async (bookId: string, score: Score) => {
         return item;
       });
     }
-    await updateDoc(docRef, { userRate: newUserRate, scoreAmount, totalScore });
+    await updateDoc(docRef, { userRate: newUserRate, scoreAmount, totalScore, averageScore: getAverageScore(totalScore, scoreAmount) });
     bookDetailsStore.updateTotalScore(totalScore);
     bookDetailsStore.updateScoreAmount(scoreAmount);
   } catch (e) {
