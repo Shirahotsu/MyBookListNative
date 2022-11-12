@@ -59,7 +59,7 @@ export default function Profile({navigation}: RootTabScreenProps<'Profile'>) {
       <View style={s.basicInfo}>
         <BasicInfo />
         <View>
-          <LinkButton label={'Przyjaciele'} link={'Friends'} />
+          <LinkButton label={'Znajomi'} link={'Friends'} />
           <View style={s.horizontalBar} />
           <LinkButton label={'Wykresy'} link={'Charts'} />
           <View style={s.horizontalBar} />

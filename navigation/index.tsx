@@ -109,8 +109,8 @@ const TopStack = createNativeStackNavigator();
 function TopStackScreen({navigation}: any) {
   return (
     <TopStack.Navigator initialRouteName="Top">
-      <TopStack.Screen name="Top" component={Top} />
-      <TopStack.Screen name="Top-Details" component={BookDetails} />
+      <TopStack.Screen name="Top" component={Top} options={{title:'Najpopularniejsze'}}/>
+      <TopStack.Screen name="Top-Details" component={BookDetails} options={{title:'Szczegóły książki'}}/>
     </TopStack.Navigator>
   );
 }
@@ -120,9 +120,9 @@ const SearchStack = createNativeStackNavigator();
 function SearchStackScreen({navigation}: any) {
   return (
     <SearchStack.Navigator initialRouteName="Search">
-      <SearchStack.Screen name="Search" component={Search} />
-      <SearchStack.Screen name="Search-Details" component={BookDetails} />
-      <SearchStack.Screen name="AddBook" component={AddBookScreen} />
+      <SearchStack.Screen name="Search" component={Search} options={{title:'Wyszukaj'}}/>
+      <SearchStack.Screen name="Search-Details" component={BookDetails} options={{title:'Wyszukana książka'}}/>
+      <SearchStack.Screen name="AddBook" component={AddBookScreen} options={{title:'Dodaj'}}/>
     </SearchStack.Navigator>
   );
 }
@@ -132,8 +132,8 @@ const MyBookshelfStack = createNativeStackNavigator();
 function MyBookshelfStackScreen({navigation}: any) {
   return (
     <MyBookshelfStack.Navigator initialRouteName="MyBookShelf">
-      <MyBookshelfStack.Screen name="MyBookShelf" component={MyList} />
-      <MyBookshelfStack.Screen name="Details" component={BookDetails} />
+      <MyBookshelfStack.Screen name="MyBookShelf" component={MyList} options={{title:'Półka z książkami'}}/>
+      <MyBookshelfStack.Screen name="Details" component={BookDetails} options={{title:'Moja książka'}}/>
     </MyBookshelfStack.Navigator>
   );
 }
@@ -143,16 +143,18 @@ const ProfileStack = createNativeStackNavigator();
 function ProfileStackScreen({navigation}: any) {
   return (
     <ProfileStack.Navigator>
-      <ProfileStack.Screen name="Profile" component={Profile} />
-      <ProfileStack.Screen name="Friends" component={FriendScreen} />
+      <ProfileStack.Screen name="Profile" component={Profile} options={{title:'Profil'}}/>
+      <ProfileStack.Screen name="Friends" component={FriendScreen} options={{title:'Znajomi'}}/>
       <ProfileStack.Screen
         name={'FriendProfile'}
         component={FriendProfileScreen}
+        options={{title:'Profil znajomego'}}
       />
-      <ProfileStack.Screen name={'Charts'} component={ChartsScreen} />
+      <ProfileStack.Screen name={'Charts'} component={ChartsScreen} options={{title:'Wykresy'}}/>
       <ProfileStack.Screen
         name={'Achievements'}
         component={AchievementsScreen}
+        options={{title:'Osiągnięcia'}}
       />
     </ProfileStack.Navigator>
   );
