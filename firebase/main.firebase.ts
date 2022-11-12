@@ -11,6 +11,7 @@ import {getFirestore} from 'firebase/firestore/lite';
 import {userStore} from '../store/user.store';
 // @ts-ignore
 import {firebaseConfig} from './firebaseConfig';
+import { getUserLoginError } from "../utils/responseErrors";
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -39,7 +40,7 @@ const login = async (email: string, password: string) => {
 
     return {success: true, value: userCredential};
   } catch (e) {
-    return {success: false, value: e};
+    return {success: false, value: getUserLoginError(e)};
   }
 };
 

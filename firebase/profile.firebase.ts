@@ -97,7 +97,7 @@ const updateUserName = async (userName: string) => {
     profileStore.changeUserName(userName);
     return true;
   } catch (e) {
-
+    return false
   }
 };
 
