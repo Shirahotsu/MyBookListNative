@@ -106,6 +106,7 @@ export default function AnnualReadPages() {
     const dailyReadPages: DailyReadPages[] = profileStore.dailyReadPages;
     const totalReadPagesPerMonth = getTotalReadPagesPerMonth(dailyReadPages);
     setMaxValue(Math.max(...totalReadPagesPerMonth));
+
     setData(totalReadPagesPerMonth);
     setIsLoading(false)
   }, []);
@@ -149,7 +150,7 @@ export default function AnnualReadPages() {
           <View key={index}
                 style={{ width: 20, flex: 1, flexDirection: "column", height: 230, justifyContent: "flex-end" }}>
             {
-              !isLoading &&
+              !isLoading && maxValue>0 &&
               <TouchableOpacity style={{ height: getHeightPercentage(item) + "%", justifyContent: "flex-end" }}
                                 onPress={() => handleOnChartItemClick(index, item)}>
                 <View style={{
