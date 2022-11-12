@@ -110,7 +110,7 @@ function TopStackScreen({navigation}: any) {
   return (
     <TopStack.Navigator initialRouteName="Top">
       <TopStack.Screen name="Top" component={Top} />
-      <TopStack.Screen name="Details" component={BookDetails} />
+      <TopStack.Screen name="Top-Details" component={BookDetails} />
     </TopStack.Navigator>
   );
 }
@@ -121,7 +121,7 @@ function SearchStackScreen({navigation}: any) {
   return (
     <SearchStack.Navigator initialRouteName="Search">
       <SearchStack.Screen name="Search" component={Search} />
-      <SearchStack.Screen name="Details" component={BookDetails} />
+      <SearchStack.Screen name="Search-Details" component={BookDetails} />
       <SearchStack.Screen name="AddBook" component={AddBookScreen} />
     </SearchStack.Navigator>
   );
@@ -142,7 +142,7 @@ const ProfileStack = createNativeStackNavigator();
 
 function ProfileStackScreen({navigation}: any) {
   return (
-    <ProfileStack.Navigator initialRouteName="Profile">
+    <ProfileStack.Navigator>
       <ProfileStack.Screen name="Profile" component={Profile} />
       <ProfileStack.Screen name="Friends" component={FriendScreen} />
       <ProfileStack.Screen
@@ -167,7 +167,7 @@ function BottomTabNavigator() {
     <>
       <BottomTab.Navigator
         backBehavior="history"
-        initialRouteName="Profile"
+        initialRouteName="ProfileStack"
         screenOptions={{
           tabBarActiveTintColor: Colors[colorScheme].tint,
         }}>
@@ -208,7 +208,7 @@ function BottomTabNavigator() {
           }}
         />
         <BottomTab.Screen
-          name="Profile"
+          name="ProfileStack"
           component={ProfileStackScreen}
           options={{
             unmountOnBlur: true,

@@ -18,12 +18,16 @@ export default function BasicInfo() {
   });
   const modalRef = React.createRef();
 
-  useEffect(async () => {
+  useEffect( () => {
+    handelOnUseEffect()
+  }, []);
+
+  const handelOnUseEffect = async () => {
     await loadProfileDetails();
     if (profileStore.profile.userName !== userName.value) {
       setUserName({value: profileStore.profile.userName});
     }
-  }, []);
+  }
 
   const handleOnEditPress = () => {
     console.log('%c HANDLE', 'color:fuchsia');

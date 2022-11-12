@@ -47,6 +47,8 @@ class AchievementsStore {
             clearNewAchievementDialog: action,
             showAchievementModal: action,
             hideAchievementModal: action,
+            updateAchievementOnBookRemove: action,
+            updateAchievementValue: action,
         })
     }
 

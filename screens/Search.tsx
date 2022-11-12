@@ -46,7 +46,7 @@ export default function Search({navigation}: RootTabScreenProps<'Search'>) {
   const handleOnBookItemClick = (book: Book) => {
     bookDetailsStore.setIsInBookshelfView(false);
     bookDetailsStore.setBookDetails(book);
-    navigation.push('Details');
+    navigation.push('Search-Details');
   };
 
   const handleOnKeyPress = (event: KeyboardEvent) => {

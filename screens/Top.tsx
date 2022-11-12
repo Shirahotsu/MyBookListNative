@@ -36,7 +36,7 @@ export default function Top({navigation}: any) {
   const handleOnBookItemClick = (book: Book) => {
     bookDetailsStore.setIsInBookshelfView(false);
     bookDetailsStore.setBookDetails(book);
-    navigation.push('Details');
+    navigation.push('Top-Details');
   };
 
   const BookListView = observer(() => {

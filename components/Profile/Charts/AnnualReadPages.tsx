@@ -101,8 +101,8 @@ export default function AnnualReadPages() {
   const [maxValue, setMaxValue] = useState(0);
   const [selectedValue, setSelectedValue] = useState({ index: 0, value: 0 });
 
-  useEffect(async () => {
-    await loadProfileDetails();
+  useEffect( () => {
+    // await loadProfileDetails();
     const dailyReadPages: DailyReadPages[] = profileStore.dailyReadPages;
     const totalReadPagesPerMonth = getTotalReadPagesPerMonth(dailyReadPages);
     setMaxValue(Math.max(...totalReadPagesPerMonth));

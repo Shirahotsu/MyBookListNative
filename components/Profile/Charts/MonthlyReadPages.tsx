@@ -52,9 +52,9 @@ const MonthlyReadPages = () => {
     const [markedDates, setMarkedDates] = useState({})
     const [isLoaded, setIsLoaded] = useState(false)
 
-    useEffect(async () => {
+    useEffect( () => {
         if (!isLoaded) {
-            await loadProfileDetails()
+            // await loadProfileDetails()
 
             const dailyReadPages = profileStore.dailyReadPages
             const convertedObject = {}
