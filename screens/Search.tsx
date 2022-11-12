@@ -36,11 +36,13 @@ export default function Search({navigation}: RootTabScreenProps<'Search'>) {
 
   const [inputSearchQuery, setinputSearchQuery] = useState('');
   const [currentSearchQuery, setCurrentSearchQuery] = useState('');
-  const [isLoading, setInputSearchQuery] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [showSearchHint, setShowSearchHint] = useState(true);
 
-  const handleOnLoadMoreBooks = () => {
-    loadAdditional50SearchResults(currentSearchQuery);
+  const handleOnLoadMoreBooks = async () => {
+    setIsLoading(true)
+    await loadAdditional50SearchResults(currentSearchQuery);
+    setIsLoading(false)
   };
 
   const handleOnBookItemClick = (book: Book) => {
@@ -63,9 +65,9 @@ export default function Search({navigation}: RootTabScreenProps<'Search'>) {
     }
     setCurrentSearchQuery(inputSearchQuery);
     setShowSearchHint(false);
-    setInputSearchQuery(true);
+    setIsLoading(true);
     await loadFirst50SearchResults(inputSearchQuery);
-    setInputSearchQuery(false);
+    setIsLoading(false);
   };
 
   const handleOnFabPress = () => {
@@ -94,7 +96,7 @@ export default function Search({navigation}: RootTabScreenProps<'Search'>) {
         <View style={{flex:1}}>
           {bookListStore.bookList?.map((book, i) => (
             <View key={i} style={s.item}>
-              <TouchableHighlight onPress={() => handleOnBookItemClick(book)}>
+              <TouchableOpacity onPress={() => handleOnBookItemClick(book)}>
                 <BookItem
                   isFromMyBookList={false}
                   title={book.title}
@@ -102,7 +104,7 @@ export default function Search({navigation}: RootTabScreenProps<'Search'>) {
                   score={getAverageScore(book.totalScore, book.scoreAmount)}
                   number={i + 1}
                 />
-              </TouchableHighlight>
+              </TouchableOpacity>
             </View>
           ))}
           {bookListStore.loadMoreBooks ? (
@@ -141,13 +143,13 @@ export default function Search({navigation}: RootTabScreenProps<'Search'>) {
           />
           <View
             style={[s.searchIcon, {backgroundColor: Colors[colorScheme].tint}]}>
-            <TouchableHighlight onPress={() => handleSearch()}>
+            <TouchableOpacity onPress={() => handleSearch()}>
               <FontAwesomeIcon
                 size={FontSize.h3}
                 icon={faSearch}
                 color={'white'}
               />
-            </TouchableHighlight>
+            </TouchableOpacity>
           </View>
         </View>
         <BookListView />

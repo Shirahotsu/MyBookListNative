@@ -7,7 +7,7 @@ import {
 
 import {Button, Text, View} from '../components/Themed';
 import BookItem from '../components/BookItem/BookItem';
-import React, {useEffect} from 'react';
+import React, { useEffect, useState } from "react";
 import Spacing from '../constants/Spacing';
 import {
   loadFirst10Books,
@@ -24,13 +24,22 @@ import {getAverageScore} from '../utils/score';
 
 export default function Top({navigation}: any) {
   const colorScheme = useColorScheme();
+  const [isLoading, seIsLoading] = useState(true)
 
   useEffect(() => {
-    loadFirst10Books();
+    handleLoadFirstBooks()
   }, []);
 
-  const handleOnLoadMoreBooks = () => {
-    loadAdditional10Books();
+  const handleLoadFirstBooks = async () => {
+    seIsLoading(true)
+    await loadFirst10Books();
+    seIsLoading(false)
+  }
+
+  const handleOnLoadMoreBooks = async () => {
+    seIsLoading(true)
+    await loadAdditional10Books();
+    seIsLoading(false)
   };
 
   const handleOnBookItemClick = (book: Book) => {
@@ -55,7 +64,7 @@ export default function Top({navigation}: any) {
             </TouchableHighlight>
           </View>
         ))}
-        {bookListStore.loadMoreBooks && (
+        {!isLoading && bookListStore.loadMoreBooks && (
           <Button
             title={'Pobierz więcej'}
             onPress={() => handleOnLoadMoreBooks()}
@@ -71,6 +80,9 @@ export default function Top({navigation}: any) {
       <ScrollView style={s.scroll}>
         <SortOptions />
         <BookListView />
+        {
+          isLoading && <Text style={{width:'100%', textAlign: 'center'}}>Ładowanie...</Text>
+        }
       </ScrollView>
     </SafeAreaView>
   );
