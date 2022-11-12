@@ -1,42 +1,38 @@
-import {
-  Image,
-  StyleSheet,
-  View as ViewRN,
-} from 'react-native';
+import { Image, StyleSheet, View as ViewRN } from "react-native";
 
-import {Button, Text, View, TextInput, ScrollView} from '../components/Themed';
+import { Button, ScrollView, Text, TextInput, View } from "../components/Themed";
 
-import FontSize from '../constants/FontSize';
-import Spacing from '../constants/Spacing';
+import FontSize from "../constants/FontSize";
+import Spacing from "../constants/Spacing";
 // import {FontAwesome5} from '@expo/vector-icons';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faStar} from '@fortawesome/free-regular-svg-icons';
-import {faUsers, faBookReader} from '@fortawesome/free-solid-svg-icons';
-import Colors from '../constants/Colors';
-import Title from '../components/BookItem/Title';
-import useColorScheme from '../hooks/useColorScheme';
-import BadgeThemed from '../components/BadgeThemed';
-import {observer} from 'mobx-react';
-import {bookDetailsStore} from '../store/bookDetails.store';
-import {convertDateToDashedDate, convertSecondsToDate} from '../utils/date';
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faStar } from "@fortawesome/free-regular-svg-icons";
+import { faBookReader, faUsers } from "@fortawesome/free-solid-svg-icons";
+import Colors from "../constants/Colors";
+import Title from "../components/BookItem/Title";
+import useColorScheme from "../hooks/useColorScheme";
+import BadgeThemed from "../components/BadgeThemed";
+import { observer } from "mobx-react";
+import { bookDetailsStore } from "../store/bookDetails.store";
+import { convertDateToDashedDate, convertSecondsToDate } from "../utils/date";
 import React, { createRef, useEffect, useRef, useState } from "react";
-import {Book} from '../models/Book.model';
-import {addComment} from '../firebase/bookList.firebase';
-import {getAverageScore} from '../utils/score';
-import {BookStatus} from '../models/BookShelf.model';
-import Dropdown from '../components/Dropdown';
+import { Book } from "../models/Book.model";
+import { addComment } from "../firebase/bookList.firebase";
+import { getAverageScore } from "../utils/score";
+import { BookStatus } from "../models/BookShelf.model";
+import Dropdown from "../components/Dropdown";
 import {
   addToBookshelf,
   changeBookPagesRead,
   changeBookScore,
   changeBookStatus,
   removeFromBookshelf,
-} from '../firebase/bookShelf.firebase';
-import {useToast} from 'react-native-toast-notifications';
-import {profileStore} from '../store/profile.store';
+} from "../firebase/bookShelf.firebase";
+import { useToast } from "react-native-toast-notifications";
+import { profileStore } from "../store/profile.store";
 import { loadProfileDetails, updateProfileDailyReadPages } from "../firebase/profile.firebase";
-import {RootTabScreenProps} from '../types';
-import {achievementsStore} from '../store/achievements.store';
+import { RootTabScreenProps } from "../types";
+import { achievementsStore } from "../store/achievements.store";
 
 const statusOptions = [
   {
@@ -442,9 +438,9 @@ export default function BookDetails({
             <View style={s.releasedDateContainer}>
               <Text style={{marginRight: Spacing.xs}}>Data wydania:</Text>
               <Text>
-                {convertDateToDashedDate(
-                  convertSecondsToDate(bookDetails.released.seconds),
-                )}
+                { bookDetails?.released?.seconds &&
+                  convertDateToDashedDate(convertSecondsToDate(bookDetails.released.seconds),)
+                }
               </Text>
             </View>
 
@@ -507,9 +503,9 @@ export default function BookDetails({
                         opacity: 0.8,
                       }}>
                       {' '}
-                      {convertDateToDashedDate(
-                        convertSecondsToDate(comment.released.seconds),
-                      )}
+                      {comment?.released?.seconds &&
+                      convertDateToDashedDate(convertSecondsToDate(comment.released.seconds))
+                      }
                     </Text>
                   </View>
                   <Text style={{marginLeft: Spacing.xs}}>
