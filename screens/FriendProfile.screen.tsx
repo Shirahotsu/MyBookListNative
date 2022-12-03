@@ -47,6 +47,7 @@ const FriendProfileScreen = () => {
               maxPages={book.pages}
               score={book.myScore}
               status={book.status}
+              bookCover={book.bookCover}
             />
           );
         })}

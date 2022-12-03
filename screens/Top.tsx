@@ -60,6 +60,7 @@ export default function Top({navigation}: any) {
                 booksRead={book.usersFinished}
                 score={book.averageScore}
                 number={i + 1}
+                bookCover={book.bookCover}
               />
             </TouchableHighlight>
           </View>

@@ -15,14 +15,35 @@ import useColorScheme from '../../hooks/useColorScheme';
 import FontSize from '../../constants/FontSize';
 import BookItemProps from '../../models/BookItemProps.model';
 import {BookStatus} from '../../models/BookShelf.model';
+import { useEffect, useState } from "react";
+import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 
 export default function BookItem(props: BookItemProps) {
   const colorScheme = useColorScheme();
-  const bookCover: string = props.bookCover ?? '';
+  const bookCover: string | null = props.bookCover ?? null;
   const isFromMyBookList: boolean = props.isFromMyBookList ?? false;
   const score: number | string = props.score ?? '-';
   const pagesRead: number | string = props.pagesRead ?? '0';
   const maxPages: number | string = props.maxPages ?? '0';
+  const [url, setUrl] = useState(null);
+
+  useEffect(() => {
+    console.log('bookCover', bookCover);
+    if(bookCover){
+      loadBookCover()
+    }
+    console.log("%c NOT", "color:Lime ");
+  }, []);
+
+  const loadBookCover = async () => {
+    const storage = getStorage();
+    const reference = ref(storage, bookCover);
+    await getDownloadURL(reference).then((x) => {
+      if(x) {
+        setUrl(x);
+      }
+    })
+  }
 
   const getStatusTextFormEnum = (status: BookStatus | undefined | null) => {
     switch (status) {
@@ -40,10 +61,18 @@ export default function BookItem(props: BookItemProps) {
   return (
     <View style={s.bookItemContainer}>
       <View style={s.bookImageContainer}>
-        <Image
-          style={s.bookImage}
-          source={require('../../assets/images/book-img-1.jpg')}
-        />
+        {
+          url !== null
+            ?  <Image
+              style={s.bookImage}
+              source={{uri: url}}
+            />
+            :  <Image
+              style={s.bookImage}
+              source={require('../../assets/images/defaultBookCover.jpg')}
+            />
+        }
+
       </View>
       <View style={s.bookInfo}>
         <View>

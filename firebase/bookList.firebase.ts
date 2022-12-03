@@ -24,6 +24,8 @@ import { firebaseConfig } from "./firebaseConfig";
 import { userStore } from "../store/user.store";
 import { convertDateToSeconds } from "../utils/date";
 import { getAverageScore } from "../utils/score";
+import { Alert, Platform } from "react-native";
+import storage from '@react-native-firebase/storage';
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -46,7 +48,7 @@ const loadAdditional10Books = async () => {
   const { sortBy, direction } = bookListStore.sortOption;
   const count = await getBookListCount();
   const colRef = collection(db, "book");
-  const q = query(colRef, orderBy(sortBy, direction), startAfter(bookListStore.lastVisibleDoc), limit(1));
+  const q = query(colRef, orderBy(sortBy, direction), startAfter(bookListStore.lastVisibleDoc), limit(10));
   const snapshot = await getDocs(q);
   const bookList: Book[] = [];
   snapshot.forEach(doc => {
@@ -168,14 +170,18 @@ const updateBookScore = async (bookId: string, score: Score) => {
   }
 };
 
-const addBook = async (newBook: any) => {
+const addBook = async (newBook: any, image: any) => {
+  const response = await uploadBookCover(image)
+  if (!response.response) {
+    return false
+  }
   const colRef = collection(db, `book`);
   const seconds = convertDateToSeconds(new Date());
   const book: Book = {
     title: newBook.title,
     comments: [],
     userRate: [],
-    bookCover: null,
+    bookCover: response.name,
     categories: newBook.categories,
     description: newBook.description,
     searchTitle: newBook.title.toLowerCase(),
@@ -204,6 +210,25 @@ const addBook = async (newBook: any) => {
 
 
 };
+
+const uploadBookCover = async (image: any) => {
+  const uid = new Date().getTime();
+  const { uri } = image;``
+  const uploadUri = Platform.OS === "ios" ? uri.replace("file://", "") : uri;
+  const task = storage()
+    .ref('book-covers/'+uid)
+    .putFile(uploadUri);
+
+  try {
+    await task;
+    return {response: true, name: 'book-covers/'+uid}
+  } catch (e) {
+    console.error(e);
+    return {response: false, name: '' }
+  }
+
+
+}
 
 
 export {

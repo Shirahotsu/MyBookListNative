@@ -28,6 +28,7 @@ import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 
 const getAverageScore = (totalScore: number, scoreAmount: number) => {
+  if(totalScore === 0 || scoreAmount===0) return 0
   return parseFloat((totalScore / scoreAmount).toFixed(2));
 };
 
@@ -101,8 +102,9 @@ export default function Search({navigation}: RootTabScreenProps<'Search'>) {
                   isFromMyBookList={false}
                   title={book.title}
                   booksRead={book.usersFinished}
-                  score={getAverageScore(book.totalScore, book.scoreAmount)}
+                  score={book.averageScore}
                   number={i + 1}
+                  bookCover={book.bookCover}
                 />
               </TouchableOpacity>
             </View>

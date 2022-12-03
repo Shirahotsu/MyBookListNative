@@ -1,36 +1,37 @@
-import React, { useEffect, useState } from "react";
-import { Button, Text, TextInput, View } from "../components/Themed";
+import React, { useState } from "react";
+import { Button, ScrollView, Text, TextInput, View } from "../components/Themed";
 import useColorScheme from "../hooks/useColorScheme";
 import Colors from "../constants/Colors";
 import Spacing from "../constants/Spacing";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCheckSquare, faSquare } from "@fortawesome/free-regular-svg-icons";
 import FontSize from "../constants/FontSize";
-import { TouchableOpacity } from "react-native";
+import { ActivityIndicator, Alert, Image, Modal, Platform, StyleSheet, TouchableOpacity } from "react-native";
 import { addBook } from "../firebase/bookList.firebase";
 import { useToast } from "react-native-toast-notifications";
 import { RootTabScreenProps } from "../types";
 import Voice, { SpeechErrorEvent, SpeechResultsEvent } from "@react-native-community/voice";
 import { faClose, faMicrophone } from "@fortawesome/free-solid-svg-icons";
+import { ImageLibraryOptions, launchImageLibrary } from "react-native-image-picker";
 
 const AddBookScreen = ({ navigation }: RootTabScreenProps<"Search">) => {
 
   const onSpeechError = (e: SpeechErrorEvent) => {
-    setInputVoice('')
-    Voice.destroy().then(Voice.removeAllListeners)
+    setInputVoice("");
+    Voice.destroy().then(Voice.removeAllListeners);
   };
 
   const onSpeechResults = async (e: SpeechResultsEvent) => {
     if (e?.value) {
       setResultsToInput(e?.value[0]);
-      Voice.destroy().then(Voice.removeAllListeners)
+      Voice.destroy().then(Voice.removeAllListeners);
     }
   };
 
 
   Voice.onSpeechError = onSpeechError;
   Voice.onSpeechResults = onSpeechResults;
-  let inputToBeSet = ''
+  let inputToBeSet = "";
 
   const toast = useToast();
   const colorScheme = useColorScheme();
@@ -39,6 +40,8 @@ const AddBookScreen = ({ navigation }: RootTabScreenProps<"Search">) => {
   const [releaseDate, setReleaseDate] = useState("2022-01-01");
   const [pages, setPages] = useState("");
   const [inputVoice, setInputVoice] = useState("");
+  const [image, setImage] = useState(null);
+  const [uploading, setUploading] = useState(false);
   const [categories, setCategories] = useState([
     {
       label: "Fantastyka",
@@ -71,7 +74,7 @@ const AddBookScreen = ({ navigation }: RootTabScreenProps<"Search">) => {
   ]);
 
   const startRecognizing = async (input: string) => {
-    inputToBeSet = input
+    inputToBeSet = input;
     setInputVoice(input);
     try {
       await Voice.start("pl-pl");
@@ -127,7 +130,9 @@ const AddBookScreen = ({ navigation }: RootTabScreenProps<"Search">) => {
       pages: parseInt(pages),
       categories: categories.filter(v => v.selected).map(v => v.label),
     };
-    const result = await addBook(newBook);
+    setUploading(true)
+    const result = await addBook(newBook, image);
+    setUploading(false)
     if (result) {
       toast.show("Dodano", { type: "success" });
       navigation.navigate("Search");
@@ -136,8 +141,32 @@ const AddBookScreen = ({ navigation }: RootTabScreenProps<"Search">) => {
     }
   };
 
+  const selectImage = () => {
+    const options: ImageLibraryOptions = {
+      maxWidth: 2000,
+      maxHeight: 2000,
+    };
+
+    console.log(options);
+
+    launchImageLibrary(options, response => {
+      if (response.didCancel) {
+        console.log("User cancelled image picker");
+      } else if (response.error) {
+        console.log("ImagePicker Error: ", response.error);
+      } else if (response.customButton) {
+        console.log("User tapped custom button: ", response.customButton);
+      } else {
+        console.log(response);
+        const source = { uri: response.assets[0].uri };
+        console.log(source);
+        setImage(source);
+      }
+    });
+  };
+
   return (
-    <View style={{ flex: 1, backgroundColor: Colors[colorScheme].background, paddingHorizontal: Spacing.md }}>
+    <ScrollView style={{ flex: 1, backgroundColor: Colors[colorScheme].background, paddingHorizontal: Spacing.md }}>
       <Text>{inputVoice}</Text>
       <View style={{ flexDirection: "row", alignItems: "center", marginTop: Spacing.md }}>
         <TextInput value={title} onChangeText={setTitle} style={{ flex: 1 }} placeholder={"Tytuł"} />
@@ -205,7 +234,8 @@ const AddBookScreen = ({ navigation }: RootTabScreenProps<"Search">) => {
           )
         }
       </View>
-      <TouchableOpacity>
+
+      <TouchableOpacity onPress={() => selectImage()}>
         <Text style={{
           marginTop: Spacing.lg,
           marginBottom: Spacing.md,
@@ -214,15 +244,117 @@ const AddBookScreen = ({ navigation }: RootTabScreenProps<"Search">) => {
           textDecorationStyle: "solid",
           textDecorationLine: "underline",
           textDecorationColor: Colors[colorScheme].text,
-        }}>Dodaj okładkę...</Text>
+        }}>
+          {
+            image !== null ? "Zmień okładkę..." : "Dodaj okładkę..."
+          }
+        </Text>
       </TouchableOpacity>
-      <View style={{ marginTop: Spacing.xl }}>
+
+      {image !== null &&
+      <View>
+        <Text style={{ width: "100%", marginBottom: Spacing.sm }}>Przykładowy wygląd okładki książki:</Text>
+
+        <View style={s.selectedImageWrapper}>
+          <View style={s.imageContainer}>
+            <Image source={{ uri: image.uri }} style={s.imageBox} />
+          </View>
+          <View style={s.spacer} />
+        </View>
+      </View>
+      }
+
+      <View style={{ marginVertical: Spacing.xl }}>
         <Button title={"Dodaj książkę"} onPress={() => {
           handleOnSubmit();
         }} />
       </View>
-    </View>
+      {
+        uploading &&
+          <View style={s.modalWrapper}>
+            <Modal  transparent={true}>
+              <View style={s.modalView}>
+                <Text style={{fontSize: FontSize.h1, textAlign: "center"}}>Trwa dodawanie książki, proszę czekać...</Text>
+                <ActivityIndicator style={{marginVertical: Spacing.md}} size={100} color={Colors.dark.tint} />
+              </View>
+            </Modal>
+          </View>
+      }
+    </ScrollView>
   );
 };
+
+const s = StyleSheet.create({
+  modalWrapper: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+  },
+  modalView: {
+    margin: 20,
+    marginTop: 300,
+    backgroundColor: Colors.dark.background,
+    borderRadius: 20,
+    padding: Spacing.md,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  container: {
+    flex: 1,
+    alignItems: "center",
+    backgroundColor: "#bbded6",
+  },
+  selectButton: {
+    borderRadius: 5,
+    width: 150,
+    height: 50,
+    backgroundColor: "#8ac6d1",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  uploadButton: {
+    borderRadius: 5,
+    width: 150,
+    height: 50,
+    backgroundColor: "#ffb6b9",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  selectedImageWrapper: {
+    flex: 1,
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  imageContainer: {
+    flex: 0.3,
+    height: 150,
+  },
+  spacer: {
+    flex: 0.7,
+    height: 150,
+  },
+  progressBarContainer: {
+    marginTop: 20,
+  },
+  imageBox: {
+    resizeMode: "cover",
+    width: "100%",
+    height: "100%",
+  },
+});
 
 export default AddBookScreen;

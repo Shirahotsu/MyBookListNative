@@ -57,6 +57,7 @@ export default function MyList({navigation}: RootTabScreenProps<'MyList'>) {
                 maxPages={book.pages}
                 score={book.myScore}
                 status={book.status}
+                bookCover={book.bookCover}
               />
             </TouchableHighlight>
           </View>
