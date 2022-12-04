@@ -10,6 +10,7 @@ import {loadBooksInFriendsBookshelf} from '../firebase/friendProfile.firebase';
 import BookItem from '../components/BookItem/BookItem';
 import AchievementsScreen from './Achievements.screen';
 import FriendsAchievements from '../components/Friend/FriendsAchievements';
+import FriendAvatar from "../components/Friend/FriendAvatar";
 
 const FriendProfileScreen = () => {
   useEffect(() => {
@@ -20,10 +21,7 @@ const FriendProfileScreen = () => {
     friendProfileStore.profile && (
       <View style={s.infoContainerView}>
         <View style={s.avatarContainer}>
-          <Image
-            style={s.avatarImage}
-            source={require('../assets/images/avatar2.png')}
-          />
+          <FriendAvatar avatar={friendProfileStore.profile.avatar}/>
         </View>
         <View style={s.infoContainer}>
           <Text style={s.infoText}>{friendProfileStore.profile.userName}</Text>

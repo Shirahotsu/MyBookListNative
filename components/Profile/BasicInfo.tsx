@@ -102,7 +102,7 @@ export default function BasicInfo() {
                   />
                   : <Image
                     style={s.avatarImage}
-                    source={require("../../assets/images/avatar2.png") }
+                    source={require("../../assets/images/defaultAvatar.jpg") }
                   />
               }
             </TouchableOpacity>

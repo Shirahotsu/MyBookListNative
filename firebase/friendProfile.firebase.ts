@@ -21,7 +21,7 @@ const loadFriendProfileDetails = async (id:string):Promise<boolean> => {
             const friendProfile: FriendProfileModel = {
                 userId: data.userId,
                 achievements: data.achievements,
-                avatar: null,
+                avatar: data.avatar || null,
                 bookShelf: data.bookShelf,
                 userName: data.userName,
                 dayStreak: data.dayStreak,

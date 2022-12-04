@@ -7,10 +7,10 @@ import {profileStore} from '../store/profile.store';
 import FontSize from '../constants/FontSize';
 import Spacing from '../constants/Spacing';
 import {
-  addUserToFriends,
+  addUserToFriends, getUserAvatar,
   loadProfileList,
   removeUserFromFriends,
-} from '../firebase/profile.firebase';
+} from "../firebase/profile.firebase";
 import Colors from '../constants/Colors';
 import {Friend} from '../models/Profile.model';
 import {useToast} from 'react-native-toast-notifications';
@@ -20,6 +20,7 @@ import {achievementsStore} from '../store/achievements.store';
 import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import {faTrash} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-native-fontawesome";
+import FriendAvatar from "../components/Friend/FriendAvatar";
 
 const FriendScreen = ({navigation}: RootTabScreenProps<'Profile'>) => {
   let timer;
@@ -60,14 +61,12 @@ const FriendScreen = ({navigation}: RootTabScreenProps<'Profile'>) => {
     }
   };
 
+
   const Friend = ({friend, mode = 'view'}) => {
     return (
       <View style={s.friendView}>
         <View style={s.avatarContainer}>
-          <Image
-            style={s.avatarImage}
-            source={require('../assets/images/avatar2.png')}
-          />
+          <FriendAvatar avatar={friend.avatar}/>
         </View>
 
         <View style={s.usernameView}>
