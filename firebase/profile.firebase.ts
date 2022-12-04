@@ -21,6 +21,9 @@ import { firebaseConfig } from "./firebaseConfig";
 import { toJS } from "mobx";
 import { achievementsStore } from "../store/achievements.store";
 import { convertDateToSeconds } from "../utils/date";
+import { Platform } from "react-native";
+import storage from "@react-native-firebase/storage";
+import { getDownloadURL, getStorage, ref } from "firebase/storage";
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -69,7 +72,7 @@ const loadProfileDetails = async () => {
     const userProfile: Profile = {
       userId: data.userId,
       achievements: data.achievements,
-      avatar: null,
+      avatar: data.avatar || null,
       bookShelf: data.bookShelf,
       dailyReadPages: data.dailyReadPages,
       userName: data.userName,
@@ -100,6 +103,31 @@ const updateUserName = async (userName: string) => {
     return false
   }
 };
+
+const updateUserAvatar = async (image: string) => {
+  const userId = userStore.user.uid
+  const uploadUri = Platform.OS === "ios" ? image.replace("file://", "") : image;
+  const imageId = 'avatars/'+userId
+  const task = storage()
+    .ref(imageId)
+    .putFile(uploadUri);
+
+  try {
+    await task;
+    const docRef = doc(db, `profile/${userId}`);
+    await updateDoc(docRef, { avatar: imageId });
+    return {response:true, name: imageId}
+  } catch (e) {
+    console.error(e);
+    return {response:false, name: ''}
+  }
+}
+
+const getUserAvatar = async (image: string) => {
+  const storage = getStorage();
+  const reference = ref(storage, image);
+  return await getDownloadURL(reference)
+}
 
 
 const loadProfileList = async (username: string) => {
@@ -243,4 +271,6 @@ export {
   removeUserFromFriends,
   updateAchievements,
   updateProfileDailyReadPages,
+  updateUserAvatar,
+  getUserAvatar,
 };

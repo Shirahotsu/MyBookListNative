@@ -1,36 +1,43 @@
-import {Image, StyleSheet} from 'react-native';
+import { Image, StyleSheet, TouchableOpacity } from "react-native";
 
-import {Text, View, Button, TextInput} from '../Themed';
-import Spacing from '../../constants/Spacing';
-import FontSize from '../../constants/FontSize';
-import React, {useEffect, useState} from 'react';
-import {
-  loadProfileDetails,
-  updateUserName,
-} from '../../firebase/profile.firebase';
-import {profileStore} from '../../store/profile.store';
-import {Observer} from 'mobx-react';
-import Modal from '../Modal';
+import { Button, Text, TextInput, View } from "../Themed";
+import Spacing from "../../constants/Spacing";
+import FontSize from "../../constants/FontSize";
+import React, { useEffect, useState } from "react";
+import { getUserAvatar, loadProfileDetails, updateUserAvatar, updateUserName } from "../../firebase/profile.firebase";
+import { profileStore } from "../../store/profile.store";
+import { Observer } from "mobx-react";
+import Modal from "../Modal";
+import { ImageLibraryOptions, launchImageLibrary } from "react-native-image-picker";
+import {useToast} from 'react-native-toast-notifications';
 
 export default function BasicInfo() {
   const [userName, setUserName] = useState({
-    value: '',
+    value: "",
   });
+  const [image, setImage] = useState(null);
   const modalRef = React.createRef();
+  const toast = useToast();
 
-  useEffect( () => {
-    handelOnUseEffect()
+  useEffect(() => {
+    handelOnUseEffect();
   }, []);
 
   const handelOnUseEffect = async () => {
     await loadProfileDetails();
     if (profileStore.profile.userName !== userName.value) {
-      setUserName({value: profileStore.profile.userName});
+      setUserName({ value: profileStore.profile.userName });
     }
-  }
+    const avatarImg: string | null = profileStore.profile.avatar;
+    if (avatarImg) {
+      const avatar = await getUserAvatar(avatarImg)
+      setImage(avatar);
+    } else {
+      setImage(null);
+    }
+  };
 
   const handleOnEditPress = () => {
-    console.log('%c HANDLE', 'color:fuchsia');
     modalRef.current.open();
   };
 
@@ -40,12 +47,45 @@ export default function BasicInfo() {
   };
 
   const handleOnCancel = async () => {
-    setUserName({value: profileStore.profile.userName});
+    setUserName({ value: profileStore.profile.userName });
     modalRef.current.close();
   };
 
   const handleUserNameChange = val => {
-    setUserName({value: val});
+    setUserName({ value: val });
+  };
+
+  const selectImage = async () => {
+    const options: ImageLibraryOptions = {
+      maxWidth: 2000,
+      maxHeight: 2000,
+    };
+
+    console.log(options);
+
+    launchImageLibrary(options, async response => {
+      if (response.didCancel) {
+        console.log("User cancelled image picker");
+      } else if (response.error) {
+        console.log("ImagePicker Error: ", response.error);
+      } else if (response.customButton) {
+        console.log("User tapped custom button: ", response.customButton);
+      } else {
+        const source = { uri: response.assets[0].uri };
+        if (!source && !source.uri) {
+          toast.show('Nie udało się dodać zdjęcia2', { type: 'danger' });
+          return
+        }
+        const updateUserAvatarResponse = await updateUserAvatar(source.uri)
+        if (updateUserAvatarResponse.response) {
+          setImage(source.uri);
+          toast.show('Pomyślnie zmieniono avatar', { type: 'success' });
+        } else {
+          setImage(profileStore.profile.avatar ?? null)
+          toast.show('Nie udało się dodać zdjęcia', { type: 'danger' });
+        }
+      }
+    });
   };
 
   return (
@@ -53,10 +93,19 @@ export default function BasicInfo() {
       {() => (
         <View style={s.container}>
           <View style={s.avatarContainer}>
-            <Image
-              style={s.avatarImage}
-              source={require('../../assets/images/avatar2.png')}
-            />
+            <TouchableOpacity onPress={selectImage}>
+              {
+                image !== null
+                  ? <Image
+                    style={s.avatarImage}
+                    source={{ uri: image }}
+                  />
+                  : <Image
+                    style={s.avatarImage}
+                    source={require("../../assets/images/avatar2.png") }
+                  />
+              }
+            </TouchableOpacity>
           </View>
           <View style={s.infoContainer}>
             <Text onPress={() => handleOnEditPress()} style={s.infoText}>
@@ -69,17 +118,17 @@ export default function BasicInfo() {
           <Modal ref={modalRef}>
             <View>
               <TextInput
-                style={{width: 250}}
+                style={{ width: 250 }}
                 value={userName.value}
                 onChangeText={v => handleUserNameChange(v)}
               />
               <View style={s.buttonsView}>
-                <View style={{marginRight: Spacing.sm}}>
-                  <Button title={'Zapisz'} onPress={() => handleOnSave()} />
+                <View style={{ marginRight: Spacing.sm }}>
+                  <Button title={"Zapisz"} onPress={() => handleOnSave()} />
                 </View>
                 <Button
-                  color={'#607D8B'}
-                  title={'Anuluj'}
+                  color={"#607D8B"}
+                  title={"Anuluj"}
                   onPress={() => handleOnCancel()}
                 />
               </View>
@@ -93,25 +142,25 @@ export default function BasicInfo() {
 
 const s = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    width: '100%',
+    flexDirection: "row",
+    width: "100%",
   },
   avatarContainer: {
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
     width: 100,
     height: 100,
-    overflow: 'hidden',
+    overflow: "hidden",
     borderRadius: 100,
   },
   avatarImage: {
-    resizeMode: 'cover',
-    width: '100%',
-    height: '100%',
+    resizeMode: "cover",
+    width: "100%",
+    height: "100%",
   },
   infoContainer: {
     paddingHorizontal: Spacing.lg,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
+    flexDirection: "column",
+    justifyContent: "space-between",
   },
   infoText: {
     fontSize: FontSize.h4,
@@ -119,8 +168,8 @@ const s = StyleSheet.create({
     width: 190,
   },
   buttonsView: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
+    flexDirection: "row",
+    justifyContent: "flex-end",
     marginTop: Spacing.md,
   },
 });
