@@ -50,22 +50,22 @@ class BookListStore {
         this.bookList?.push(...bookList)
     }
 
-    setSortBy(sortBy: string) {
+    async setSortBy(sortBy: string) {
         this.sortOption.sortBy = sortBy
-        this.reloadBookList()
+        await this.reloadBookList()
     }
 
-    toggleSortDirection() {
+    async toggleSortDirection() {
         if (this.sortOption.direction === 'asc') {
             this.sortOption.direction = 'desc'
         } else {
             this.sortOption.direction = 'asc'
         }
-        this.reloadBookList()
+        await this.reloadBookList()
     }
 
-    reloadBookList() {
-        loadFirst10Books()
+    async reloadBookList() {
+        await loadFirst10Books()
     }
 
     get bookListLength() {

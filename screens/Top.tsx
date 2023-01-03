@@ -1,51 +1,43 @@
-import {
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  TouchableHighlight,
-} from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, TouchableHighlight } from "react-native";
 
-import {Button, Text, View} from '../components/Themed';
-import BookItem from '../components/BookItem/BookItem';
+import { Button, Text, View } from "../components/Themed";
+import BookItem from "../components/BookItem/BookItem";
 import React, { useEffect, useState } from "react";
-import Spacing from '../constants/Spacing';
-import {
-  loadFirst10Books,
-  loadAdditional10Books,
-} from '../firebase/bookList.firebase';
-import {bookListStore} from '../store/bookList.store';
-import {observer} from 'mobx-react';
-import SortOptions from '../components/TopBooks/SortOptions';
-import {Book} from '../models/Book.model';
-import {bookDetailsStore} from '../store/bookDetails.store';
-import Colors from '../constants/Colors';
-import useColorScheme from '../hooks/useColorScheme';
-import {getAverageScore} from '../utils/score';
+import Spacing from "../constants/Spacing";
+import { loadAdditional10Books, loadFirst10Books } from "../firebase/bookList.firebase";
+import { bookListStore } from "../store/bookList.store";
+import { observer } from "mobx-react";
+import SortOptions from "../components/TopBooks/SortOptions";
+import { Book } from "../models/Book.model";
+import { bookDetailsStore } from "../store/bookDetails.store";
+import Colors from "../constants/Colors";
+import useColorScheme from "../hooks/useColorScheme";
 
-export default function Top({navigation}: any) {
+export default function Top({ navigation }: any) {
   const colorScheme = useColorScheme();
-  const [isLoading, seIsLoading] = useState(true)
+  const [isLoading, setLoading] = useState(false);
+  const [isLoadingMainView, setIsLoadingMainView] = useState(true);
 
   useEffect(() => {
-    handleLoadFirstBooks()
+    handleLoadFirstBooks();
   }, []);
 
   const handleLoadFirstBooks = async () => {
-    seIsLoading(true)
+    setIsLoadingMainView(true);
     await loadFirst10Books();
-    seIsLoading(false)
-  }
+    setIsLoadingMainView(false);
+  };
 
   const handleOnLoadMoreBooks = async () => {
-    seIsLoading(true)
+    setLoading(true);
     await loadAdditional10Books();
-    seIsLoading(false)
+    setLoading(false);
   };
 
   const handleOnBookItemClick = (book: Book) => {
     bookDetailsStore.setIsInBookshelfView(false);
     bookDetailsStore.setBookDetails(book);
-    navigation.push('Top-Details');
+    navigation.push("Top-Details");
   };
 
   const BookListView = observer(() => {
@@ -67,7 +59,7 @@ export default function Top({navigation}: any) {
         ))}
         {!isLoading && bookListStore.loadMoreBooks && (
           <Button
-            title={'Pobierz więcej'}
+            title={"Pobierz więcej"}
             onPress={() => handleOnLoadMoreBooks()}
           />
         )}
@@ -77,13 +69,22 @@ export default function Top({navigation}: any) {
 
   return (
     <SafeAreaView
-      style={[s.container, {backgroundColor: Colors[colorScheme].background}]}>
+      style={[s.container, { backgroundColor: Colors[colorScheme].background }]}>
       <ScrollView style={s.scroll}>
-        <SortOptions />
-        <BookListView />
+        <SortOptions onLoad={setIsLoadingMainView} />
         {
-          isLoading && <Text style={{width:'100%', textAlign: 'center'}}>Ładowanie...</Text>
+          isLoadingMainView
+            ? <Text style={{ width: "100%", textAlign: "center" }}>Ładowanie...</Text>
+            : (
+              <>
+                <BookListView />
+                {
+                  isLoading && <Text style={{ width: "100%", textAlign: "center" }}>Ładowanie...</Text>
+                }
+              </>
+            )
         }
+
       </ScrollView>
     </SafeAreaView>
   );
@@ -92,16 +93,16 @@ export default function Top({navigation}: any) {
 const s = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   scroll: {
     flex: 1,
-    width: '100%',
+    width: "100%",
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   item: {
     marginVertical: Spacing.sm,

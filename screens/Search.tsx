@@ -26,6 +26,7 @@ import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import FontSize from '../constants/FontSize';
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
+import SearchInput from "../components/Search/SearchInput";
 
 const getAverageScore = (totalScore: number, scoreAmount: number) => {
   if(totalScore === 0 || scoreAmount===0) return 0
@@ -35,7 +36,7 @@ const getAverageScore = (totalScore: number, scoreAmount: number) => {
 export default function Search({navigation}: RootTabScreenProps<'Search'>) {
   const colorScheme = useColorScheme();
 
-  const [inputSearchQuery, setinputSearchQuery] = useState('');
+  // const [inputSearchQuery, setinputSearchQuery] = useState('');
   const [currentSearchQuery, setCurrentSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showSearchHint, setShowSearchHint] = useState(true);
@@ -52,13 +53,7 @@ export default function Search({navigation}: RootTabScreenProps<'Search'>) {
     navigation.push('Search-Details');
   };
 
-  const handleOnKeyPress = (event: KeyboardEvent) => {
-    if (event.key === 'Enter') {
-      handleSearch();
-    }
-  };
-
-  const handleSearch = async () => {
+  const handleSearch = async (inputSearchQuery: string) => {
     const trimmedQuery = inputSearchQuery.trim();
     if (!trimmedQuery) {
       setCurrentSearchQuery('');
@@ -136,24 +131,24 @@ export default function Search({navigation}: RootTabScreenProps<'Search'>) {
     <SafeAreaView
       style={[s.container, {backgroundColor: Colors[colorScheme].background}]}>
       <ScrollView style={s.scroll}>
-        <View style={s.searchView}>
-          <TextInput
-            style={s.searchInput}
-            value={inputSearchQuery}
-            onChangeText={setinputSearchQuery}
-            onKeyPress={e => handleOnKeyPress(e)}
-          />
-          <View
-            style={[s.searchIcon, {backgroundColor: Colors[colorScheme].tint}]}>
-            <TouchableOpacity onPress={() => handleSearch()}>
-              <FontAwesomeIcon
-                size={FontSize.h3}
-                icon={faSearch}
-                color={'white'}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
+      <SearchInput onSearch={handleSearch}/>
+        {/*<View style={s.searchView}>*/}
+        {/*  <TextInput*/}
+        {/*    style={s.searchInput}*/}
+        {/*    value={inputSearchQuery}*/}
+        {/*    onChangeText={setinputSearchQuery}*/}
+        {/*  />*/}
+        {/*  <View*/}
+        {/*    style={[s.searchIcon, {backgroundColor: Colors[colorScheme].tint}]}>*/}
+        {/*    <TouchableOpacity onPress={() => handleSearch()}>*/}
+        {/*      <FontAwesomeIcon*/}
+        {/*        size={FontSize.h3}*/}
+        {/*        icon={faSearch}*/}
+        {/*        color={'white'}*/}
+        {/*      />*/}
+        {/*    </TouchableOpacity>*/}
+        {/*  </View>*/}
+        {/*</View>*/}
         <BookListView />
       </ScrollView>
       <View style={s.fab}>

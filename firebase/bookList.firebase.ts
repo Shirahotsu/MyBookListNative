@@ -39,6 +39,7 @@ const loadFirst10Books = async () => {
   snapshot.forEach(doc => {
     bookList.push({ ...<Book>doc.data(), id: doc.id });
   });
+  console.log(bookList);
   bookListStore.setLastVisibleDoc(snapshot.docs[snapshot.docs.length - 1]);
   bookListStore.setBookList(bookList);
   bookListStore.setLoadMoreBooks(true);
@@ -46,7 +47,6 @@ const loadFirst10Books = async () => {
 
 const loadAdditional10Books = async () => {
   const { sortBy, direction } = bookListStore.sortOption;
-  const count = await getBookListCount();
   const colRef = collection(db, "book");
   const q = query(colRef, orderBy(sortBy, direction), startAfter(bookListStore.lastVisibleDoc), limit(10));
   const snapshot = await getDocs(q);
@@ -54,10 +54,10 @@ const loadAdditional10Books = async () => {
   snapshot.forEach(doc => {
     bookList.push({ ...<Book>doc.data(), id: doc.id });
   });
-  console.log("lastVis", (snapshot.docs[snapshot.docs.length - 1]));
   bookListStore.addToBookList(bookList);
   bookListStore.setLastVisibleDoc(snapshot.docs[snapshot.docs.length - 1]);
-  if (bookListStore.bookListLength >= count) {
+  console.log('snapshot.docs.length', snapshot.docs.length);
+  if (snapshot.docs.length < 1) {
     bookListStore.setLoadMoreBooks(false);
   }
 };
@@ -100,7 +100,6 @@ const loadFirst50SearchResults = async (queryText: string) => {
   });
   bookListStore.setLastVisibleDoc(snapshot.docs[snapshot.docs.length - 1]);
   bookListStore.setBookList(bookList);
-  console.log(bookListStore.bookListLength <= 50);
   bookListStore.setLoadMoreBooks(!(bookListStore.bookListLength <= 50));
 };
 
@@ -188,6 +187,7 @@ const addBook = async (newBook: any, image: any) => {
     totalScore: 0,
     scoreAmount: 0,
     usersFinished: 0,
+    averageScore: 0,
     released: { seconds: seconds },
     pages: newBook.pages,
     id: "",

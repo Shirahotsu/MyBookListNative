@@ -1,31 +1,35 @@
-import {Button, Text, View} from '../Themed';
+import { Text, View } from "../Themed";
 // import {FontAwesome5} from '@expo/vector-icons';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import FontSize from '../../constants/FontSize';
-import Colors from '../../constants/Colors';
-import useColorScheme from '../../hooks/useColorScheme';
-import {StyleSheet, TouchableHighlight} from 'react-native';
-import Spacing from '../../constants/Spacing';
-import {useEffect} from 'react';
-import {bookListStore} from '../../store/bookList.store';
-import {observer} from 'mobx-react';
-import {faArrowUp, faArrowDown} from '@fortawesome/free-solid-svg-icons';
-import {faStar} from '@fortawesome/free-regular-svg-icons';
-import {faBookReader} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import FontSize from "../../constants/FontSize";
+import Colors from "../../constants/Colors";
+import useColorScheme from "../../hooks/useColorScheme";
+import { StyleSheet, TouchableHighlight } from "react-native";
+import Spacing from "../../constants/Spacing";
+import { useEffect } from "react";
+import { bookListStore } from "../../store/bookList.store";
+import { observer } from "mobx-react";
+import { faArrowDown, faArrowUp, faBookReader } from "@fortawesome/free-solid-svg-icons";
+import { faStar } from "@fortawesome/free-regular-svg-icons";
 
-export default function SortOptions(props: any) {
+
+export default function SortOptions({onLoad}:any) {
   const colorScheme = useColorScheme();
 
   useEffect(() => {
     bookListStore.setInitialSortOptionState();
   }, []);
 
-  const handleOnSortByChange = (sortBy: string) => {
-    bookListStore.setSortBy(sortBy);
+  const handleOnSortByChange = async (sortBy: string) => {
+    await bookListStore.setSortBy(sortBy);
+    onLoad(true);
+    onLoad(false);
   };
 
-  const handleOnDirectionChange = () => {
-    bookListStore.toggleSortDirection();
+  const handleOnDirectionChange = async () => {
+    await bookListStore.toggleSortDirection();
+    onLoad(true);
+    onLoad(false);
   };
 
   const ButtonGroup = observer(() => {

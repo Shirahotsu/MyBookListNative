@@ -28,11 +28,9 @@ export default function BookItem(props: BookItemProps) {
   const [url, setUrl] = useState(null);
 
   useEffect(() => {
-    console.log('bookCover', bookCover);
     if(bookCover){
       loadBookCover()
     }
-    console.log("%c NOT", "color:Lime ");
   }, []);
 
   const loadBookCover = async () => {
@@ -67,9 +65,8 @@ export default function BookItem(props: BookItemProps) {
               style={s.bookImage}
               source={{uri: url}}
             />
-            :  <Image
+            :  <View
               style={s.bookImage}
-              source={require('../../assets/images/defaultBookCover.jpg')}
             />
         }
 
