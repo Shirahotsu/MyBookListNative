@@ -13,6 +13,7 @@ import { RootTabScreenProps } from "../types";
 import Voice, { SpeechErrorEvent, SpeechResultsEvent } from "@react-native-community/voice";
 import { faClose, faMicrophone } from "@fortawesome/free-solid-svg-icons";
 import { ImageLibraryOptions, launchImageLibrary } from "react-native-image-picker";
+import Datepicker from "../components/Datepicker";
 
 const AddBookScreen = ({ navigation }: RootTabScreenProps<"Search">) => {
 
@@ -164,6 +165,9 @@ const AddBookScreen = ({ navigation }: RootTabScreenProps<"Search">) => {
       }
     });
   };
+  const handleOnDateSelect = (date: any) =>{
+    setReleaseDate(date)
+  }
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: Colors[colorScheme].background, paddingHorizontal: Spacing.md }}>
@@ -217,7 +221,7 @@ const AddBookScreen = ({ navigation }: RootTabScreenProps<"Search">) => {
           </View>
         </TouchableOpacity>
       </View>
-      <TextInput value={releaseDate} style={{ marginTop: Spacing.md }} placeholder={"Data wydania"} editable={false} />
+      <Datepicker label={'Data wydania'} data={{}} onSelect={handleOnDateSelect}/>
       <View style={{ marginTop: Spacing.md }}>
         {
           categories.map((category, index) =>
@@ -265,7 +269,7 @@ const AddBookScreen = ({ navigation }: RootTabScreenProps<"Search">) => {
       }
 
       <View style={{ marginVertical: Spacing.xl }}>
-        <Button title={"Dodaj książkę"} onPress={() => {
+        <Button disabled={!releaseDate || !title || !description || !pages || !image || !categories.find(c=>c.selected) } title={"Dodaj książkę"} onPress={() => {
           handleOnSubmit();
         }} />
       </View>
