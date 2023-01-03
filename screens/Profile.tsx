@@ -14,6 +14,7 @@ import React from 'react';
 import Colors from '../constants/Colors';
 import {RootTabScreenProps} from '../types';
 import {achievementsStore} from '../store/achievements.store';
+import { createMockBooks } from "../firebase/books.firebase.mock";
 
 export default function Profile({navigation}: RootTabScreenProps<'Profile'>) {
   const colorScheme = useColorScheme();
@@ -73,6 +74,12 @@ export default function Profile({navigation}: RootTabScreenProps<'Profile'>) {
           <Button
             title={'Show achievement'}
             onPress={() => showAchievementModal()}
+          />
+        </View>
+        <View style={s.logOutButton}>
+          <Button
+            title={'createMockBooks'}
+            onPress={() => createMockBooks()}
           />
         </View>
       </View>
