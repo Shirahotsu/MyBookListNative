@@ -431,7 +431,7 @@ export default function BookDetails({
         <>
           <View style={s.container}>
             <View>
-              <Text numberOfLines={1} style={s.title}>
+              <Text style={s.title}>
                 {bookDetails.title}
               </Text>
             </View>
