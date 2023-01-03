@@ -33,6 +33,7 @@ import { profileStore } from "../store/profile.store";
 import { loadProfileDetails, updateProfileDailyReadPages } from "../firebase/profile.firebase";
 import { RootTabScreenProps } from "../types";
 import { achievementsStore } from "../store/achievements.store";
+import { getDownloadURL, getStorage, ref } from "firebase/storage";
 
 const statusOptions = [
   {
@@ -106,6 +107,7 @@ export default function BookDetails({
   const [bookStatus, setBookStatus] = useState(null);
   const [pagesRead, setPagesRead] = useState('0');
   const [isBookInBookshelf, setIsBookInBookshelf] = useState(false);
+  const [url, setUrl] = useState(null);
   const textInput = createRef();
   const toast = useToast();
 
@@ -118,7 +120,20 @@ export default function BookDetails({
       setInitialPagesRead();
     }
     setInitialIsBookInBookshelf();
+    if(bookDetailsStore.bookDetails?.bookCover){
+      loadBookCover()
+    }
   }, []);
+
+  const loadBookCover = async () => {
+    const storage = getStorage();
+    const reference = ref(storage, bookDetailsStore.bookDetails?.bookCover);
+    await getDownloadURL(reference).then((x) => {
+      if(x) {
+        setUrl(x);
+      }
+    })
+  }
 
   const setInitialBookStatus = () => {
     const value = bookDetailsStore.bookDetails?.status;
@@ -423,10 +438,16 @@ export default function BookDetails({
 
             <View style={s.mainInfo}>
               <View style={s.mainInfoImageContainer}>
-                <Image
-                  style={s.mainInfoImage}
-                  source={require('../assets/images/book-img-1.jpg')}
-                />
+                {
+                  url !== null
+                    ?  <Image
+                      style={s.mainInfoImage}
+                      source={{uri: url}}
+                    />
+                    :  <View
+                      style={s.mainInfoImage}
+                    />
+                }
               </View>
               <View style={s.mainInfoContent}>
                 <MainInfoButtons isInBookshelfView={isInBookshelfView} />
