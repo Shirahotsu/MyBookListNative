@@ -34,10 +34,6 @@ export default function Profile({navigation}: RootTabScreenProps<'Profile'>) {
     navigation.push(link);
   };
 
-  const showAchievementModal = () => {
-    achievementsStore.showAchievementModal('pages', 4);
-  };
-
   const LinkButton = ({label, link}) => {
     return (
       <TouchableOpacity onPress={() => navigateTo(link)}>
@@ -68,19 +64,6 @@ export default function Profile({navigation}: RootTabScreenProps<'Profile'>) {
         </View>
         <View style={s.logOutButton}>
           <Button title={'Wyloguj się'} onPress={() => handleOnLogOut()} />
-        </View>
-
-        <View style={s.logOutButton}>
-          <Button
-            title={'Show achievement'}
-            onPress={() => showAchievementModal()}
-          />
-        </View>
-        <View style={s.logOutButton}>
-          <Button
-            title={'createMockBooks'}
-            onPress={() => createMockBooks()}
-          />
         </View>
       </View>
     </ScrollView>

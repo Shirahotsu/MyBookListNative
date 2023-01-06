@@ -10,11 +10,14 @@ import { Observer } from "mobx-react";
 import Modal from "../Modal";
 import { ImageLibraryOptions, launchImageLibrary } from "react-native-image-picker";
 import {useToast} from 'react-native-toast-notifications';
+import { createMockBooks } from "../../firebase/books.firebase.mock";
+import { achievementsStore } from "../../store/achievements.store";
 
 export default function BasicInfo() {
   const [userName, setUserName] = useState({
     value: "",
   });
+  const [isMockDisabled, setIsMockDisabled] = useState(true);
   const [image, setImage] = useState(null);
   const modalRef = React.createRef();
   const toast = useToast();
@@ -88,10 +91,17 @@ export default function BasicInfo() {
     });
   };
 
+  const showAchievementModal = () => {
+    achievementsStore.showAchievementModal('pages', 4);
+  };
+
   return (
     <Observer>
       {() => (
-        <View style={s.container}>
+        <View style={{flexDirection: "row", width: "100%", flexWrap: profileStore?.profile?.userId === 'f3RZyFngfgOpls3hD6DnMNeWfUV2'? 'wrap': 'nowrap' }}>
+
+
+
           <View style={s.avatarContainer}>
             <TouchableOpacity onPress={selectImage}>
               {
@@ -107,6 +117,7 @@ export default function BasicInfo() {
               }
             </TouchableOpacity>
           </View>
+
           <View style={s.infoContainer}>
             <Text onPress={() => handleOnEditPress()} style={s.infoText}>
               {profileStore.profile.userName}
@@ -115,6 +126,32 @@ export default function BasicInfo() {
             <View />
             {/*<Text style={s.infoText}>Dni pod rząd: {profileStore.profile.achievements.streak.value}</Text>*/}
           </View>
+
+          {
+            profileStore?.profile?.userId === 'f3RZyFngfgOpls3hD6DnMNeWfUV2' &&
+            <View style={{width: '100%', height: 200}}>
+              <View style={{marginBottom: Spacing.sm}}>
+                <Button
+                  title={'Show achievement'}
+                  onPress={() => showAchievementModal()}
+                />
+              </View>
+              <View style={{marginBottom: Spacing.sm}}>
+                <Button
+                  title={'unlock'}
+                  onPress={() => setIsMockDisabled(false)}
+                />
+              </View>
+              <View style={{marginBottom: Spacing.sm}}>
+                <Button
+                  disabled={isMockDisabled}
+                  title={'createMockBooks'}
+                  onPress={() => createMockBooks()}
+                />
+              </View>
+            </View>
+          }
+
           <Modal ref={modalRef}>
             <View>
               <TextInput
