@@ -10,12 +10,11 @@ import { createProfileDetails, loadProfileDetails } from "../firebase/profile.fi
 
 export default function LogIn({ navigation }: any) {
   const image = require("../assets/images/main-auth-bg.png");
-  console.log("HALOOOO");
   const toast = useToast();
   const [isInLoginView, setIsInLoginView] = useState(true);
   const [loginParams, setLoginParams] = useState({
-    email: "arek.erdu@o2.pl",
-    password: "wsadwsad1",
+    email: "",
+    password: "",
   });
 
   const setEmail = value => {

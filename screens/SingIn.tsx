@@ -25,10 +25,8 @@ export default function SignIn({ navigation }: any) {
   };
 
   const onSignIn = async () => {
-    console.log("%c onSignIn", "color:fuchsia");
     const response = await register(loginParams.email, loginParams.password);
     if (response.success) {
-      console.log("response", response);
       await createProfileDetails(response.value.user.uid);
       await loadProfileDetails();
       toast.show("Pomyślnie zarejestrowano się", { type: "success" });
