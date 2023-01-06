@@ -128,7 +128,7 @@ const FriendScreen = ({navigation}: RootTabScreenProps<'Profile'>) => {
           ))
         ) : (
           <View>
-            <Text>NIC</Text>
+            <Text>Brak</Text>
           </View>
         )}
       </>
