@@ -119,7 +119,6 @@ const Datepicker: FC<Props> = ({ label, data, onSelect, selectedOption }) => {
                     hideExtraDays
                     enableSwipeMonths
                     current={convertDateToDashedDate(INITIAL_DATE)}
-                    minDate={"2022-03-01"}
                     onDayPress={onDayPress}
                     markingType={"custom"}
                     theme={theme("dark")}
